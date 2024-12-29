@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation</title>
+    <style>
+    .container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f2f2f2;
+    }
+
+    .heading{
+        background-color: #f2f2f2;
+    }
+    .EXP1{
+        text-align: center;
+    }
+
+    .AIM{
+        text-align:justify;
+
+    }
+
+    
+    form {
+        width: 350px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+    }
+    input[type="text"], input[type="email"], input[type="password"], input[type="tel"], select {
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    label.checkbox-label {
+        margin-top: 10px;
+    }
+    input[type="checkbox"] {
+        margin-right: 5px;
+    }
+    input[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        display: none; 
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #ab1111;
+        color: white; 
+    }
+    
+  
+</style>
+</head>
+<body>
+    <div class = "heading">
+        <div class = "EXP1">
+            <H1>STUDENT REGISTERATION</H1>
+        </div>
+        </div>
+    </div>
+    <div class="container">
+        <form id="myForm" onsubmit="return validateForm()">
+            <label for="name">Name:</label>
+            <input type="text" id="name" placeholder="Enter your name">
+            <div id="nameError" class="error"></div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" placeholder="Enter your email">
+            <div id="emailError" class="error"></div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Enter your password">
+            <div id="passwordError" class="error"></div>
+            <label for="confirmPassword">Confirm Password:</label>
+            <input type="password" id="confirmPassword" placeholder="Confirm your password">
+            <div id="confirmPasswordError" class="error"></div>
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" placeholder="Enter your phone number">
+            <div id="phoneError" class="error"></div>
+            <label for="degree">Degree:</label>
+            <select id="degree" onchange="updateCourses()">
+                <option value="">Select</option>
+                <option value="BE">BE</option>
+                <option value="BTECH">B.TECH</option>
+            </select>
+            <div id="degreeError" class="error"></div>
+    
+            <label for="course">Course:</label>
+            <select id="course">
+                <option value="">Select</option>
+            </select>
+            <div id="courseError" class="error"></div>
+            <label>Gender:</label>
+            <input type="radio" name="gender" value="male">Male
+            <input type="radio" name="gender" value="female">Female
+            <input type="radio" name="gender" value="female">Other
+            <div id="genderError" class="error"></div>
+            <br>
+            <input type="checkbox" id="checkbox" onclick="enableSubmit()">
+            <label for="checkbox">click to Agree the terms and conditions:</label>
+            <div id="termsError" class="error"></div>
+            <input type="submit" id="submitButton" value="Submit" disabled>
+
+        </form>
+        <br>
+        <table id="formData" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                    <th>Phone Number</th>
+                    <th>Degree</th>
+                    <th>Course</th>
+                    <th>Gender</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <script>
+    var isEnteringDetails = false;
+    var inputFields = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], input[type="tel"], select');
+    inputFields.forEach(function (input) {
+        input.addEventListener('input', function () {
+            isEnteringDetails = true;
+            var name = document.getElementById('name').value;
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirmPassword').value;
+            var phone = document.getElementById('phone').value;
+            var degree = document.getElementById('degree').value;
+            var agreeTerms = document.getElementById('checkbox').checked;
+            var gender = document.querySelector('input[name="gender"]:checked');
+            document.getElementById('submitButton').disabled = false;
+        });
+    });
+    function enableSubmit() {
+    var agreeTerms = document.getElementById('checkbox').checked;
+    var submitButton = document.getElementById('submitButton');
+    var termsError = document.getElementById('termsError');
+
+   
+    if (agreeTerms) {
+        submitButton.disabled = false;
+        termsError.textContent = '';
+    } else {
+        submitButton.disabled = true;
+        termsError.textContent = 'Please agree to the terms';
+    }
+    document.getElementById('submitButton').disabled = False;
+}
+
+
+    function updateCourses() {
+        var degree = document.getElementById("degree").value;
+        var coursesDropdown = document.getElementById("course");
+        coursesDropdown.innerHTML = '<option value="">Select</option>';
+        if (degree === "BE") {
+            var beCourses = ["CSE", "CSD", "MECH", "CHEMICAL", "AUTOMOBILE"];
+            for (var i = 0; i < beCourses.length; i++) {
+                var option = document.createElement("option");
+                option.text = beCourses[i];
+                coursesDropdown.add(option);
+            }
+        } else if (degree === "BTECH") {
+            var btechCourses = ["AI", "FOOD TECH", "IT"];
+            for (var i = 0; i < btechCourses.length; i++) {
+                var option = document.createElement("option");
+                option.text = btechCourses[i];
+                coursesDropdown.add(option);
+            }
+        }
+    }
+    function validateForm() {
+        if (!isEnteringDetails) {
+            alert('Please enter your details before submitting.');
+            return false;
+        }
+        var name = document.getElementById('name').value;
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+        var confirmPassword = document.getElementById('confirmPassword').value;
+        var phone = document.getElementById('phone').value;
+        var degree = document.getElementById('degree').value;
+        var course = document.getElementById('course').value;
+        var agreeTerms = document.getElementById('checkbox').checked;
+        var gender = document.querySelector('input[name="gender"]:checked');
+        if (name === '') {
+            alert('Please enter your name');
+            return false;
+        }
+        if (email === '') {
+            alert('Please enter your email');
+            return false;
+        } else if (!isValidEmail(email)) {
+            alert('Please enter a valid email address');
+            return false;
+        }
+        if (password === '') {
+            alert('Please enter your password');
+            return false;
+        } else if (!isValidPassword(password)) {
+            alert('Password must contain at least one number, one uppercase and lowercase letter, and be at least 8 characters long');
+            return false;
+        }
+        if (confirmPassword === '') {
+            alert('Please confirm your password');
+            return false;
+        } else if (password !== confirmPassword) {
+            alert('Passwords do not match');
+            return false;
+        }
+        if (phone === '') {
+            alert('Please enter your phone number');
+            return false;
+        } else if (!isValidPhoneNumber(phone)) {
+            alert('Phone number must contain only digits and be 10 characters long');
+            return false;
+        }
+        if (degree === '') {
+            alert('Please select your degree');
+            return false;
+        }
+        if (course === '') {
+            alert('Please select your course');
+            return false;
+        }
+        if (!agreeTerms) {
+            alert('Please agree to terms');
+            return false;
+        }
+        if (!gender) {
+            alert('Please select your gender');
+            return false;
+        }
+        displayFormData(name, email, password, phone, degree, course, gender.value,);
+        isEnteringDetails = false;
+        return false;
+    }
+    function isValidEmail(email) {
+        var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        return emailRegex.test(email);
+    }
+    function isValidPassword(password) {
+        var passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+        return passwordRegex.test(password);
+    }
+    function isValidPhoneNumber(phone) {
+        var phoneRegex = /^\d{10}$/;
+        return phoneRegex.test(phone);
+    }
+    function displayFormData(name, email, password, phone, degree, course, gender) {
+        var tableBody = document.querySelector('#formData tbody');
+        var newRow = tableBody.insertRow();
+        var cell1 = newRow.insertCell(0);
+        var cell2 = newRow.insertCell(1);
+        var cell3 = newRow.insertCell(2);
+        var cell4 = newRow.insertCell(3);
+        var cell5 = newRow.insertCell(4);
+        var cell6 = newRow.insertCell(5);
+        var cell7 = newRow.insertCell(6);
+        cell1.textContent = name;
+        cell2.textContent = email;
+        cell3.textContent = password;
+        cell4.textContent = phone;
+        cell5.textContent = degree;
+        cell6.textContent = course;
+        cell7.textContent = gender;
+        var table = document.getElementById('formData');
+        table.style.display = 'table';
+    }
+    </script>
+    </body>
+</html>
+
+
